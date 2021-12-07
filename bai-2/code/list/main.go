@@ -1,11 +1,31 @@
 package main
 
-import "github.com/aws/aws-lambda-go/lambda"
+import (
+	"encoding/json"
 
-func handler() (string, error) {
-	return "Welcome to Serverless world", nil
+	"github.com/aws/aws-lambda-go/events"
+	"github.com/aws/aws-lambda-go/lambda"
+)
+
+type Books struct {
+	Id     int    `json:"id"`
+	Name   string `json:"name"`
+	Author string `json:"author"`
+}
+
+func list() (events.APIGatewayProxyResponse, error) {
+	books := []Books{
+		{Id: 1, Name: "NodeJS", Author: "NodeJS"},
+		{Id: 2, Name: "Golang", Author: "Golang"},
+	}
+
+	res, _ := json.Marshal(&books)
+	return events.APIGatewayProxyResponse{
+		StatusCode: 200,
+		Body:       string(res),
+	}, nil
 }
 
 func main() {
-	lambda.Start(handler)
+	lambda.Start(list)
 }

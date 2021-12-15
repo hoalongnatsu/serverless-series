@@ -22,7 +22,10 @@ func list() (events.APIGatewayProxyResponse, error) {
 	res, _ := json.Marshal(&books)
 	return events.APIGatewayProxyResponse{
 		StatusCode: 200,
-		Body:       string(res),
+		Headers: map[string]string{
+			"Content-Type": "application/json",
+		},
+		Body: string(res),
 	}, nil
 }
 

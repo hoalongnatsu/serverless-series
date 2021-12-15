@@ -19,7 +19,7 @@ var books = []Books{
 	{Id: 2, Name: "Golang", Author: "Golang"},
 }
 
-func update(req events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
+func delete(req events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
 	id, err := strconv.Atoi(req.PathParameters["id"])
 	if err != nil {
 		return events.APIGatewayProxyResponse{
@@ -55,5 +55,5 @@ func update(req events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, 
 }
 
 func main() {
-	lambda.Start(update)
+	lambda.Start(delete)
 }

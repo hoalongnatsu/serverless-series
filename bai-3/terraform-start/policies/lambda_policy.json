@@ -8,7 +8,7 @@
       "Resource": "*"
     },
     {
-      "Sid": "1",
+      "Sid": "2",
       "Effect": "Allow",
       "Action": "dynamodb:*",
       "Resource": "arn:aws:dynamodb:us-west-2:<ACCOUNT_ID>:table/books"

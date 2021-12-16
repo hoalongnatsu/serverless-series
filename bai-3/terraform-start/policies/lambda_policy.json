@@ -6,6 +6,12 @@
       "Action": "logs:*",
       "Effect": "Allow",
       "Resource": "*"
+    },
+    {
+      "Sid": "1",
+      "Effect": "Allow",
+      "Action": "dynamodb:*",
+      "Resource": "arn:aws:dynamodb:us-west-2:<ACCOUNT_ID>:table/books"
     }
   ]
 }

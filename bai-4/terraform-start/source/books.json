@@ -1,0 +1,11 @@
+{
+  "id": {
+    "S": "1"
+  },
+  "name": {
+    "S": "Golang"
+  },
+  "author": {
+    "S": "Golang"
+  }
+}

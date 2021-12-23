@@ -17,7 +17,7 @@
       "Sid": "3",
       "Effect": "Allow",
       "Action": "s3:PutObject",
-      "Resource": "arn:aws:s3:::test-bucket-kala/*"
+      "Resource": "arn:aws:s3:::serverless-series-upload/*"
     }
   ]
 }

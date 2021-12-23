@@ -11,6 +11,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/config"
 	"github.com/aws/aws-sdk-go-v2/feature/dynamodb/attributevalue"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
+	"github.com/aws/aws-sdk-go-v2/service/dynamodb/types"
 )
 
 type Book struct {
@@ -19,7 +20,7 @@ type Book struct {
 	Author string `json:"author"`
 }
 
-func list(req events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
+func get(req events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
 	cfg, err := config.LoadDefaultConfig(context.TODO())
 	if err != nil {
 		return events.APIGatewayProxyResponse{
@@ -29,8 +30,11 @@ func list(req events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, er
 	}
 
 	svc := dynamodb.NewFromConfig(cfg)
-	out, err := svc.Scan(context.TODO(), &dynamodb.ScanInput{
+	out, err := svc.GetItem(context.TODO(), &dynamodb.GetItemInput{
 		TableName: aws.String("books"),
+		Key: map[string]types.AttributeValue{
+			"id": &types.AttributeValueMemberS{Value: req.PathParameters["id"]},
+		},
 	})
 	if err != nil {
 		return events.APIGatewayProxyResponse{
@@ -39,16 +43,16 @@ func list(req events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, er
 		}, nil
 	}
 
-	books := []Book{}
-	err = attributevalue.UnmarshalListOfMaps(out.Items, &books)
+	movie := Book{}
+	err = attributevalue.UnmarshalMap(out.Item, &movie)
 	if err != nil {
 		return events.APIGatewayProxyResponse{
 			StatusCode: http.StatusInternalServerError,
-			Body:       "Error while Unmarshal books",
+			Body:       "Error while marshal movies",
 		}, nil
 	}
 
-	res, _ := json.Marshal(books)
+	res, _ := json.Marshal(movie)
 	return events.APIGatewayProxyResponse{
 		StatusCode: 200,
 		Headers: map[string]string{
@@ -59,5 +63,5 @@ func list(req events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, er
 }
 
 func main() {
-	lambda.Start(list)
+	lambda.Start(get)
 }

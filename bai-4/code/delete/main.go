@@ -9,8 +9,8 @@ import (
 	"github.com/aws/aws-lambda-go/lambda"
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/config"
-	"github.com/aws/aws-sdk-go-v2/feature/dynamodb/attributevalue"
 	"github.com/aws/aws-sdk-go-v2/service/dynamodb"
+	"github.com/aws/aws-sdk-go-v2/service/dynamodb/types"
 )
 
 type Book struct {
@@ -19,7 +19,16 @@ type Book struct {
 	Author string `json:"author"`
 }
 
-func list(req events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
+func get(req events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
+	var book Book
+	err := json.Unmarshal([]byte(req.Body), &book)
+	if err != nil {
+		return events.APIGatewayProxyResponse{
+			StatusCode: 400,
+			Body:       err.Error(),
+		}, nil
+	}
+
 	cfg, err := config.LoadDefaultConfig(context.TODO())
 	if err != nil {
 		return events.APIGatewayProxyResponse{
@@ -29,8 +38,11 @@ func list(req events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, er
 	}
 
 	svc := dynamodb.NewFromConfig(cfg)
-	out, err := svc.Scan(context.TODO(), &dynamodb.ScanInput{
+	out, err := svc.DeleteItem(context.TODO(), &dynamodb.DeleteItemInput{
 		TableName: aws.String("books"),
+		Key: map[string]types.AttributeValue{
+			"id": &types.AttributeValueMemberS{Value: book.Id},
+		},
 	})
 	if err != nil {
 		return events.APIGatewayProxyResponse{
@@ -39,16 +51,7 @@ func list(req events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, er
 		}, nil
 	}
 
-	books := []Book{}
-	err = attributevalue.UnmarshalListOfMaps(out.Items, &books)
-	if err != nil {
-		return events.APIGatewayProxyResponse{
-			StatusCode: http.StatusInternalServerError,
-			Body:       "Error while Unmarshal books",
-		}, nil
-	}
-
-	res, _ := json.Marshal(books)
+	res, _ := json.Marshal(out)
 	return events.APIGatewayProxyResponse{
 		StatusCode: 200,
 		Headers: map[string]string{
@@ -59,5 +62,5 @@ func list(req events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, er
 }
 
 func main() {
-	lambda.Start(list)
+	lambda.Start(get)
 }

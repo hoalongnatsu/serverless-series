@@ -3,9 +3,12 @@
     "S": "1"
   },
   "name": {
-    "S": "Golang"
+    "S": "Go in Action"
   },
   "author": {
-    "S": "Golang"
+    "S": "Erik St. Martin Foreword"
+  },
+  "image": {
+    "S": "https://images-na.ssl-images-amazon.com/images/I/41ADgj-CvsL._SX397_BO1,204,203,200_.jpg"
   }
 }

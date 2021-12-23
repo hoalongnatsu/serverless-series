@@ -17,6 +17,7 @@ type Book struct {
 	Id     string `json:"id"`
 	Name   string `json:"name"`
 	Author string `json:"author"`
+	Image  string `json:"image"`
 }
 
 func list(req events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
@@ -52,7 +53,8 @@ func list(req events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, er
 	return events.APIGatewayProxyResponse{
 		StatusCode: 200,
 		Headers: map[string]string{
-			"Content-Type": "application/json",
+			"Content-Type":                "application/json",
+			"Access-Control-Allow-Origin": "*",
 		},
 		Body: string(res),
 	}, nil

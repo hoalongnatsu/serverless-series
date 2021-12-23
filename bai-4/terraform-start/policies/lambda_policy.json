@@ -12,6 +12,12 @@
       "Effect": "Allow",
       "Action": "dynamodb:*",
       "Resource": "arn:aws:dynamodb:us-west-2:<ACCOUNT_ID>:table/books"
+    },
+    {
+      "Sid": "3",
+      "Effect": "Allow",
+      "Action": "s3:PutObject",
+      "Resource": "arn:aws:s3:::test-bucket-kala/*"
     }
   ]
 }

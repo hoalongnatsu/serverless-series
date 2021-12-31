@@ -11,7 +11,7 @@ const config: ModuleConfig = {
       exact: true,
     },
   ],
-  requireAuthenticated: "any",
+  requireAuthenticated: true,
 };
 
 export default config;

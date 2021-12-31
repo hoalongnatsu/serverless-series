@@ -42,7 +42,7 @@ func Upload(request events.APIGatewayProxyRequest, cfg aws.Config) (image string
 		return
 	}
 
-	bucket := "test-bucket-kala"
+	bucket := "serverless-series-upload"
 	filename := part.FileName()
 
 	data := &s3.PutObjectInput{

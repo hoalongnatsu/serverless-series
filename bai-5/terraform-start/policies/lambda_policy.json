@@ -18,6 +18,15 @@
       "Effect": "Allow",
       "Action": "s3:PutObject",
       "Resource": "arn:aws:s3:::serverless-series-upload/*"
+    },
+    {
+      "Sid": "4",
+      "Effect": "Allow",
+      "Action": [
+        "cognito-sync:*",
+        "cognito-identity:*"
+      ],
+      "Resource": "*"
     }
   ]
 }

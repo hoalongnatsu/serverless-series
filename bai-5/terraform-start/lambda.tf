@@ -37,3 +37,23 @@ resource "aws_lambda_function" "function_get" {
   filename         = "source/get.zip"
   source_code_hash = filebase64sha256("source/get.zip")
 }
+
+resource "aws_lambda_function" "function_login" {
+  function_name = "login"
+  role          = aws_iam_role.lambda_role.arn
+  handler       = "main"
+  runtime       = "go1.x"
+
+  filename         = "source/login.zip"
+  source_code_hash = filebase64sha256("source/login.zip")
+}
+
+resource "aws_lambda_function" "function_change_password" {
+  function_name = "change_password"
+  role          = aws_iam_role.lambda_role.arn
+  handler       = "main"
+  runtime       = "go1.x"
+
+  filename         = "source/change-password.zip"
+  source_code_hash = filebase64sha256("source/change-password.zip")
+}

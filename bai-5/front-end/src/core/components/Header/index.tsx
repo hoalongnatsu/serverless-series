@@ -59,14 +59,10 @@ const Header = ({ authenticated }: Props) => {
             <Button onClick={() => goToPage("/")}>Logo</Button>
           </Col>
           <Col lg={12} className="menu">
-            <Button><Link to="/books/create">Create new book</Link></Button>
             {authenticated ? (
               <>
-                <Button
-                  onClick={() => goToPage("/customer/mypage")}
-                  type="primary"
-                >
-                  {t("common:my-page")}
+                <Button>
+                  <Link to="/books/create">Create new book</Link>
                 </Button>
                 <Button onClick={logout} type="primary">
                   {t("common:logout")}
@@ -76,9 +72,6 @@ const Header = ({ authenticated }: Props) => {
               <>
                 <Button onClick={() => goToPage("/login")}>
                   {t("common:login")}
-                </Button>
-                <Button onClick={() => goToPage("/signup")}>
-                  {t("common:signup")}
                 </Button>
               </>
             )}

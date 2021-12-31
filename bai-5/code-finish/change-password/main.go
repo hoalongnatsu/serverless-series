@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"encoding/base64"
 	"encoding/json"
 	"net/http"
 
@@ -20,10 +21,20 @@ type Body struct {
 
 func ChangePassword(req events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
 	var body Body
-	err := json.Unmarshal([]byte(req.Body), &body)
+	b64String, _ := base64.StdEncoding.DecodeString(req.Body)
+	rawIn := json.RawMessage(b64String)
+	bodyBytes, err := rawIn.MarshalJSON()
 	if err != nil {
 		return events.APIGatewayProxyResponse{
-			StatusCode: 400,
+			StatusCode: http.StatusBadRequest,
+			Body:       err.Error(),
+		}, nil
+	}
+
+	json.Unmarshal(bodyBytes, &body)
+	if err != nil {
+		return events.APIGatewayProxyResponse{
+			StatusCode: http.StatusBadRequest,
 			Body:       err.Error(),
 		}, nil
 	}
@@ -39,7 +50,7 @@ func ChangePassword(req events.APIGatewayProxyRequest) (events.APIGatewayProxyRe
 	cip := cognitoidentityprovider.NewFromConfig(cfg)
 	authInput := &cognitoidentityprovider.InitiateAuthInput{
 		AuthFlow: "USER_PASSWORD_AUTH",
-		ClientId: aws.String("61t0adp3shrh3ihpg8ijprccud"), // Should os.Getenv("CLIENT_ID")
+		ClientId: aws.String("6jk1bh3me5h1onmbjhqalmtpp8"), // Should os.Getenv("CLIENT_ID")
 		AuthParameters: map[string]string{
 			"USERNAME": body.Username,
 			"PASSWORD": body.OldPassword,
@@ -48,14 +59,14 @@ func ChangePassword(req events.APIGatewayProxyRequest) (events.APIGatewayProxyRe
 	authResp, err := cip.InitiateAuth(context.TODO(), authInput)
 	if err != nil {
 		return events.APIGatewayProxyResponse{
-			StatusCode: http.StatusBadRequest,
+			StatusCode: http.StatusInternalServerError,
 			Body:       err.Error(),
 		}, nil
 	}
 
 	challengeInput := &cognitoidentityprovider.RespondToAuthChallengeInput{
 		ChallengeName: "NEW_PASSWORD_REQUIRED",
-		ClientId:      aws.String("61t0adp3shrh3ihpg8ijprccud"),
+		ClientId:      aws.String("6jk1bh3me5h1onmbjhqalmtpp8"),
 		ChallengeResponses: map[string]string{
 			"USERNAME":     body.Username,
 			"NEW_PASSWORD": body.NewPassword,
@@ -65,7 +76,7 @@ func ChangePassword(req events.APIGatewayProxyRequest) (events.APIGatewayProxyRe
 	challengeResp, err := cip.RespondToAuthChallenge(context.TODO(), challengeInput)
 	if err != nil {
 		return events.APIGatewayProxyResponse{
-			StatusCode: http.StatusBadRequest,
+			StatusCode: http.StatusInternalServerError,
 			Body:       err.Error(),
 		}, nil
 	}

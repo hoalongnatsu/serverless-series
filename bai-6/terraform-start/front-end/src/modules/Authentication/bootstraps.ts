@@ -11,9 +11,9 @@ const config: ModuleConfig = {
       exact: true,
     },
     {
-      path: "/signup",
-      page: "Signup",
-      title: "Signup",
+      path: "/change-password",
+      page: "ChangePassword",
+      title: "Change Password",
       exact: true,
     },
   ],

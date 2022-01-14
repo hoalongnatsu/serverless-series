@@ -6,4 +6,10 @@ export interface ValuesSignupForm {
   accepted_terms: string[];
 }
 
+export interface ValuesChangePasswordForm {
+  email: string;
+  old_password: string;
+  new_password: string;
+}
+
 export type ValuesLoginForm = Pick<ValuesSignupForm, "email" | "password">;

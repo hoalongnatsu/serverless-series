@@ -64,7 +64,8 @@ resource "null_resource" "yarn_build" {
 
 resource "null_resource" "upload" {
   depends_on = [
-    null_resource.yarn_build
+    null_resource.yarn_build,
+    aws_s3_bucket.serverless-series-spa
   ]
 
   provisioner "local-exec" {

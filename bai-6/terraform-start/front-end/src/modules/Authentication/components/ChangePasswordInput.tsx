@@ -2,13 +2,13 @@ import { Form, Input } from "antd";
 
 import useTranslate from "@core/hooks/useTranslate";
 
-const SignupInput = () => {
+const ChangePasswordInput = () => {
   const [t] = useTranslate();
 
   return (
     <>
       <Form.Item
-        name="email"
+        name="username"
         label={t("common:email")}
         validateTrigger="onBlur"
         rules={[
@@ -29,8 +29,8 @@ const SignupInput = () => {
         <Input />
       </Form.Item>
       <Form.Item
-        name="password"
-        label={t("common:password")}
+        name="old_password"
+        label={t("common:old-password")}
         extra={t("authentication:password-help")}
         hasFeedback
         validateTrigger="onBlur"
@@ -38,7 +38,7 @@ const SignupInput = () => {
           {
             required: true,
             message: t("validate:required", undefined, {
-              value: t("common:password"),
+              value: t("common:old-password"),
             }),
           },
           {
@@ -50,8 +50,8 @@ const SignupInput = () => {
         <Input.Password />
       </Form.Item>
       <Form.Item
-        name="confirm_password"
-        label={t("common:confirm-password")}
+        name="new_password"
+        label={t("common:new-password")}
         dependencies={["password"]}
         hasFeedback
         validateTrigger="onBlur"
@@ -59,31 +59,15 @@ const SignupInput = () => {
           {
             required: true,
             message: t("validate:required", undefined, {
-              value: t("common:confirm-password"),
+              value: t("common:new-password"),
             }),
           },
-          ({ getFieldValue }) => ({
-            validator(_, value) {
-              if (!value || getFieldValue("password") === value) {
-                return Promise.resolve();
-              }
-              return Promise.reject(
-                new Error(t("authentication:validate-confirm-password")),
-              );
-            },
-          }),
         ]}
       >
         <Input.Password />
-      </Form.Item>
-      <Form.Item
-        name="full_name"
-        label={t("common:full-name")}
-      >
-        <Input />
       </Form.Item>
     </>
   );
 };
 
-export default SignupInput;
+export default ChangePasswordInput;

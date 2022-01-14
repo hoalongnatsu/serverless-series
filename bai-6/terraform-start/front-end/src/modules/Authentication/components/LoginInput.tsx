@@ -20,7 +20,7 @@ const LoginForm = ({ loading }: Props) => {
       </Form.Item>
       <Form.Item
         label={t("common:email")}
-        name="email"
+        name="username"
         rules={[
           {
             type: "email",

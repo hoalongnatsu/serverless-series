@@ -6,8 +6,6 @@ import LoginInput from "@modules/Authentication/components/LoginInput";
 import ResourceContext from "@utils/contexts/Resource";
 import { ValuesLoginForm } from "@modules/Authentication/interfaces";
 import authApi from "@modules/Authentication/services/auth";
-import { set_customer_info } from "@store/actions/customer";
-import { useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
 import useTranslate from "@core/hooks/useTranslate";
 
@@ -16,7 +14,6 @@ interface Props {}
 const Login = (props: Props) => {
   const [t] = useTranslate();
   const [form] = Form.useForm();
-  const dispatch = useDispatch();
   const history = useHistory();
   const { setResourceContext } = useContext(ResourceContext);
 
@@ -27,10 +24,9 @@ const Login = (props: Props) => {
     setLoading(true);
 
     try {
-      const { token, data } = await authApi.login(values);
+      const { AuthenticationResult: { AccessToken } } = await authApi.login(values);
 
-      Auth.setToken(token);
-      dispatch(set_customer_info(data));
+      Auth.setToken(AccessToken);
       setResourceContext().then(() => {
         message.success(t("authentication:login-success"));
         history.push("/");

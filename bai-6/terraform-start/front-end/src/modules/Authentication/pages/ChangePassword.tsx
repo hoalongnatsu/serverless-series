@@ -4,37 +4,33 @@ import { Button, Col, Form, Row, Typography, message } from "antd";
 import { useContext, useState } from "react";
 
 import Auth from "@utils/helpers/auth";
+import ChangePasswordInput from "@root/modules/Authentication/components/ChangePasswordInput";
 import ResourceContext from "@utils/contexts/Resource";
-import SignupInput from "@modules/Authentication/components/SignupInput";
-import { ValuesSignupForm } from "@modules/Authentication/interfaces";
+import { ValuesChangePasswordForm } from "@modules/Authentication/interfaces";
 import authApi from "@modules/Authentication/services/auth";
-import { set_customer_info } from "@store/actions/customer";
-import { useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
 import useTranslate from "@core/hooks/useTranslate";
 
 const { Title } = Typography;
 
-const Signup = (props: Props) => {
+const ChangePassword = (props: Props) => {
   const [t] = useTranslate();
   const [form] = Form.useForm();
-  const dispatch = useDispatch();
   const history = useHistory();
   const { setResourceContext } = useContext(ResourceContext);
 
   /* State */
   const [loading, setLoading] = useState(false);
 
-  const onFinish = async (values: ValuesSignupForm) => {
+  const onFinish = async (values: ValuesChangePasswordForm) => {
     setLoading(true);
 
     try {
-      const { token, data } = await authApi.signup(values);
+      const { AuthenticationResult: { AccessToken } } = await authApi.changePassword(values);
 
-      Auth.setToken(token);
-      dispatch(set_customer_info(data));
+      Auth.setToken(AccessToken);
       setResourceContext().then(() => {
-        message.success(t("authentication:signup-success"));
+        message.success("Change password success");
         history.push("/");
       });
     } catch (error: any) {
@@ -58,10 +54,8 @@ const Signup = (props: Props) => {
       <div className="signup">
         <Form layout="vertical" form={form} name="register" onFinish={onFinish}>
           <Row gutter={32}>
-            <Col lg={10}>
-              <SignupInput />
-            </Col>
-            <Col lg={10} offset={2}>
+            <Col lg={12} offset={6}>
+              <ChangePasswordInput />
               <Button
                 htmlType="submit"
                 style={{ marginTop: 20 }}
@@ -69,7 +63,7 @@ const Signup = (props: Props) => {
                 block={true}
                 loading={loading}
               >
-                {t("common:signup")}
+                {t("common:save")}
               </Button>
             </Col>
           </Row>
@@ -79,4 +73,4 @@ const Signup = (props: Props) => {
   );
 };
 
-export default Signup;
+export default ChangePassword;

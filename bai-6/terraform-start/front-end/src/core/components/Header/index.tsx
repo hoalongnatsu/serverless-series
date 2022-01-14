@@ -73,6 +73,9 @@ const Header = ({ authenticated }: Props) => {
                 <Button onClick={() => goToPage("/login")}>
                   {t("common:login")}
                 </Button>
+                <Button onClick={() => goToPage("/change-password")}>
+                  {t("common:change-password")}
+                </Button>
               </>
             )}
             <Dropdown trigger={["click"]} overlay={menu}>

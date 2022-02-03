@@ -1,6 +1,7 @@
 resource "aws_s3_bucket" "serverless_series_spa" {
-  bucket = "serverless-series-spa"
-  acl    = "private"
+  bucket        = "serverless-series-spa"
+  acl           = "private"
+  force_destroy = true
 
   website {
     index_document = "index.html"
@@ -23,12 +24,12 @@ resource "null_resource" "yarn_install" {
 resource "null_resource" "replace" {
   depends_on = [
     null_resource.yarn_install,
-    aws_api_gateway_deployment.deployment
+    aws_api_gateway_deployment.staging
   ]
 
   provisioner "local-exec" {
     command = <<-EOT
-      cd ${path.module}/front-end && sed -i "s|staging_api|${aws_api_gateway_deployment.deployment.invoke_url}|g" .env-cmdrc
+      cd ${path.module}/front-end && sed -i "s|staging_api|${aws_api_gateway_deployment.staging.invoke_url}|g" .env-cmdrc
     EOT
   }
 }
@@ -64,7 +65,7 @@ data "aws_iam_policy_document" "s3_policy" {
     resources = ["${aws_s3_bucket.serverless_series_spa.arn}/*"]
 
     principals {
-      type        = "AWS"
+      type = "AWS"
       identifiers = [
         aws_cloudfront_origin_access_identity.origin_access_identity.iam_arn
       ]

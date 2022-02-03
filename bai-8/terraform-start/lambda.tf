@@ -8,7 +8,7 @@ resource "aws_lambda_function" "function_list" {
   source_code_hash = filebase64sha256("source/list.zip")
 }
 
-resource "aws_lambda_permission" "apigw_list" {
+resource "aws_lambda_permission" "apigw_list_staging" {
   statement_id  = "AllowAPIGatewayInvoke"
   action        = "lambda:InvokeFunction"
   function_name = aws_lambda_function.function_list.function_name
@@ -21,4 +21,13 @@ resource "aws_lambda_alias" "function_list_lambda_alias" {
   name             = "production"
   function_name    = aws_lambda_function.function_list.arn
   function_version = "$LATEST"
+}
+
+resource "aws_lambda_permission" "apigw_list_production" {
+  statement_id  = "AllowAPIGatewayInvoke"
+  action        = "lambda:InvokeFunction"
+  function_name = aws_lambda_alias.function_list_lambda_alias.arn
+  principal     = "apigateway.amazonaws.com"
+
+  source_arn = "${aws_api_gateway_rest_api.books.execution_arn}/*/*"
 }

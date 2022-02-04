@@ -26,7 +26,7 @@ resource "aws_lambda_alias" "function_list_lambda_alias" {
 resource "aws_lambda_permission" "apigw_list_production" {
   statement_id  = "AllowAPIGatewayInvoke"
   action        = "lambda:InvokeFunction"
-  function_name = aws_lambda_alias.function_list_lambda_alias.arn
+  function_name = "${aws_lambda_function.function_list.function_name}:production"
   principal     = "apigateway.amazonaws.com"
 
   source_arn = "${aws_api_gateway_rest_api.books.execution_arn}/*/*"

@@ -1,6 +1,5 @@
 provider "aws" {
   region  = "us-west-2"
-  profile = "kala"
 }
 
 resource "aws_api_gateway_rest_api" "books" {

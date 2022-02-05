@@ -46,6 +46,12 @@ resource "aws_lambda_function" "function_login" {
 
   filename         = "source/login.zip"
   source_code_hash = filebase64sha256("source/login.zip")
+
+  environment {
+    variables = {
+      COGNITO_CLIENT_ID = aws_cognito_user_pool_client.client.id
+    }
+  }
 }
 
 resource "aws_lambda_function" "function_change_password" {
@@ -56,4 +62,10 @@ resource "aws_lambda_function" "function_change_password" {
 
   filename         = "source/change-password.zip"
   source_code_hash = filebase64sha256("source/change-password.zip")
+
+  environment {
+    variables = {
+      COGNITO_CLIENT_ID = aws_cognito_user_pool_client.client.id
+    }
+  }
 }

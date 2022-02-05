@@ -5,6 +5,7 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"net/http"
+	"os"
 
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
@@ -49,7 +50,7 @@ func login(req events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, e
 	cip := cognitoidentityprovider.NewFromConfig(cfg)
 	authInput := &cognitoidentityprovider.InitiateAuthInput{
 		AuthFlow: "USER_PASSWORD_AUTH",
-		ClientId: aws.String("6jk1bh3me5h1onmbjhqalmtpp8"), // Should os.Getenv("CLIENT_ID")
+		ClientId: aws.String(os.Getenv("COGNITO_CLIENT_ID")),
 		AuthParameters: map[string]string{
 			"USERNAME": body.Username,
 			"PASSWORD": body.Password,

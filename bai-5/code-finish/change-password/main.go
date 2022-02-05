@@ -5,6 +5,7 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"net/http"
+	"os"
 
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
@@ -50,7 +51,7 @@ func ChangePassword(req events.APIGatewayProxyRequest) (events.APIGatewayProxyRe
 	cip := cognitoidentityprovider.NewFromConfig(cfg)
 	authInput := &cognitoidentityprovider.InitiateAuthInput{
 		AuthFlow: "USER_PASSWORD_AUTH",
-		ClientId: aws.String("6jk1bh3me5h1onmbjhqalmtpp8"), // Should os.Getenv("CLIENT_ID")
+		ClientId: aws.String(os.Getenv("COGNITO_CLIENT_ID")),
 		AuthParameters: map[string]string{
 			"USERNAME": body.Username,
 			"PASSWORD": body.OldPassword,
@@ -66,7 +67,7 @@ func ChangePassword(req events.APIGatewayProxyRequest) (events.APIGatewayProxyRe
 
 	challengeInput := &cognitoidentityprovider.RespondToAuthChallengeInput{
 		ChallengeName: "NEW_PASSWORD_REQUIRED",
-		ClientId:      aws.String("6jk1bh3me5h1onmbjhqalmtpp8"),
+		ClientId:      aws.String(os.Getenv("COGNITO_CLIENT_ID")),
 		ChallengeResponses: map[string]string{
 			"USERNAME":     body.Username,
 			"NEW_PASSWORD": body.NewPassword,

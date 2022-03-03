@@ -4,6 +4,8 @@ locals {
 }
 
 resource "aws_codebuild_project" "list_function_staging" {
+  count = var.enable_cicd ? 1 : 0
+
   name         = local.list_function_staging
   service_role = aws_iam_role.aws_code_build.arn
 
@@ -36,6 +38,8 @@ resource "aws_codebuild_project" "list_function_staging" {
 }
 
 resource "aws_codepipeline" "list_function_staging" {
+  count = var.enable_cicd ? 1 : 0
+
   name     = local.list_function_staging
   role_arn = aws_iam_role.aws_code_pipeline_service.arn
 
@@ -87,6 +91,8 @@ resource "aws_codepipeline" "list_function_staging" {
 }
 
 resource "aws_codebuild_project" "list_function_main" {
+  count = var.enable_cicd ? 1 : 0
+
   name         = local.list_function_main
   service_role = aws_iam_role.aws_code_build.arn
 
@@ -120,6 +126,8 @@ resource "aws_codebuild_project" "list_function_main" {
 }
 
 resource "aws_codepipeline" "list_function_main" {
+  count = var.enable_cicd ? 1 : 0
+
   name     = local.list_function_main
   role_arn = aws_iam_role.aws_code_pipeline_service.arn
 
@@ -180,7 +188,7 @@ resource "aws_codestarnotifications_notification_rule" "codepipeline_list_functi
   ]
 
   name     = "list-function-notification"
-  resource = aws_codepipeline.list_function_main.arn
+  resource = aws_codepipeline.list_function_main[0].arn
 
   target {
     address = var.chatbot_arn

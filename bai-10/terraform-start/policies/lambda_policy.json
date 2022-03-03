@@ -24,7 +24,10 @@
       "Effect": "Allow",
       "Action": [
         "cognito-sync:*",
-        "cognito-identity:*"
+        "cognito-identity:*",
+        "cloudwatch:PutMetricData",
+        "xray:PutTraceSegments",
+        "xray:PutTelemetryRecords"
       ],
       "Resource": "*"
     }
